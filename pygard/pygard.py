@@ -106,7 +106,7 @@ class Soup:
         The mean of the log-normal distribution for the enhancement matrix. Defaults to 3.
 
     B_sigma : int, optional
-        The standrad deviation of the log-normal distribution for the enhancement matrix. Defaults to 1.
+        The standard deviation of the log-normal distribution for the enhancement matrix. Defaults to 1.
     """
     
 
