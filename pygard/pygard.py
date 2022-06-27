@@ -32,12 +32,14 @@ class Micelle:
         # The remainder are assigned to the second daughter.
         compFirst = np.zeros(shape=self.composition.shape, dtype=np.int64)
 
-        for i_i, i in enumerate(self.composition):
-            if i == 0:
-                continue
-            else:
-                transfer = self.rng.integers(low=0, high=i+1)
-                compFirst[i_i] = transfer
+        # Add a minimum limit so that we can't split off an empty daughter
+        while np.sum(compFirst) == 0:
+            for i_i, i in enumerate(self.composition):
+                if i == 0:
+                    continue
+                else:
+                    transfer = self.rng.integers(low=0, high=i+1)
+                    compFirst[i_i] = transfer
             
         compSecond = self.composition - compFirst
 
@@ -84,6 +86,14 @@ class Soup:
     By taking the sum along the rows, the vector of per-amphiphile
     enhancement rates is produced. The vector element/s with the highest rate indicates the 
     amphiphile/s to be added to the growing micelle.
+
+    Parameters
+    ----------
+    N : int
+        The initial number of amphiphiles in the first micelle. Micelles split when their
+        population reaches 2*`N`
+    Ng : int
+        The total number of amphiphile types present in the system. 
     """
 
     def __init__(self, N, Ng):
