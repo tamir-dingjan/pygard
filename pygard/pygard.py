@@ -92,19 +92,35 @@ class Soup:
     N : int
         The initial number of amphiphiles in the first micelle. Micelles split when their
         population reaches 2*`N`
+    
     Ng : int
         The total number of amphiphile types present in the system. 
-    """
+    
+    K_mu : int, optional
+        The mean of the normal distribution for intrinsic affinity. Defaults to 0.
+    
+    K_sigma : int, optional
+        The standard deviation of the normal distribution for intrinsic affinity. Defaults to 1.
+    
+    B_mu : int, optional
+        The mean of the log-normal distribution for the enhancement matrix. Defaults to 3.
 
-    def __init__(self, N, Ng):
+    B_sigma : int, optional
+        The standrad deviation of the log-normal distribution for the enhancement matrix. Defaults to 1.
+    """
+    
+
+    def __init__(self, N, Ng, K_mu=0, K_sigma=1, B_mu=3, B_sigma=1):
         self.N = N
         self.Ng = Ng
-        self.K = np.ones(shape=(self.Ng, self.Ng))
+
+        normal = np.random.normal(K_mu, K_sigma, self.Ng**2)
+        self.K = np.reshape(normal, (self.Ng, self.Ng))
 
         rng = np.random.default_rng()
-        mu = 3
-        sigma = 1
-        logNormal = rng.lognormal(mu, sigma, self.Ng**2)
+        B_mu = 3
+        B_sigma = 1
+        logNormal = rng.lognormal(B_mu, B_sigma, self.Ng**2)
         self.B = np.reshape(logNormal, (self.Ng, self.Ng))
 
         self.contents = [Micelle(self.N, self.Ng)]
