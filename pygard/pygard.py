@@ -160,26 +160,4 @@ class Soup:
         """
         return np.asarray([x.composition for x in self.contents])
 
-N = 3
-Ng = 8
-soup = Soup(N,Ng)
 
-soup.B = np.zeros(shape=(Ng, Ng))
-soup.B[0] = 10
-
-predictToAdd = 0
-amphiphilesToAdd = 0
-
-for i in range(0,10):
-    # How many amphiphiles do we think we will be adding this cycle?
-    predictToAdd = predictToAdd + len(soup.contents)
-
-    # How many amphiphiles will we REALLY be adding this cycle?    
-    for micelle in soup.contents:
-        weighted = micelle.composition * soup.B
-        favouredAmphiphiles = np.sum(weighted + soup.K, axis=1)
-        amphiphilesToAdd += len(np.where(favouredAmphiphiles == favouredAmphiphiles.max())[0])
-
-
-    soup.run_cycle()
-    print("Cycle: %s \t Micelles: %s \t Total amphiphiles at end of cycle: %s \t Predicted to add since start: %s \t Actual add since start: %s \n" % (i+1, len(soup.get_composition()), np.sum(soup.get_composition(), axis=1), predictToAdd, amphiphilesToAdd))
